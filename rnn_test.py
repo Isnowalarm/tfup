@@ -26,3 +26,5 @@ h0 = lstm_cell.zero_state(32, np.float32)
 output, h1 = lstm_cell.call(inputs, h0)
 print h1.h
 print h1.c
+
+
