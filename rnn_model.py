@@ -11,7 +11,6 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 import tensorflow as tf
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "5"
 import numpy as np
 import time
 
@@ -110,10 +109,15 @@ class CharRNN(object):
                 batch_loss, new_state, _ = sess.run([self.loss, self.final_state, self.optimizer], feed_dict = feed)
                 end = time.time()
             
-            if step % log_every_n == 0:
-                print 'step: {}/{}...'.format(step, max_steps) 
-                print 'loss: {:.4f}...'.format(batch_loss)
-                print '{:.4f} sec/batch'.format(end - start)
+                if step % log_every_n == 0:
+                    print 'step: {}/{}...'.format(step, max_steps) 
+                    print 'loss: {:.4f}...'.format(batch_loss)
+                    print '{:.4f} sec/batch'.format(end - start)
+                if step % save_every_n == 0:
+                    self.saver.save(sess, os.path.join(save_path, 'model'), global_step = step)
+
+                if step >= max_steps:
+                    break
 
     def sample(self, n_samples, prime, vacab_size):
         samples = [c for c in prime]

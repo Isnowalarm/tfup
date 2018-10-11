@@ -16,15 +16,24 @@ import numpy as np
 os.environ["CUDA_VISIBLE_DEVICES"] = "5"
 
 rnn_cell = tf.nn.rnn_cell.BasicRNNCell(num_units = 128)
-print rnn_cell.state_size
+#print rnn_cell.state_size
 
 lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(num_units = 128)
-print lstm_cell.state_size
+#print lstm_cell.state_size
 
 inputs = tf.placeholder(np.float32, shape = (32, 100))
 h0 = lstm_cell.zero_state(32, np.float32)
 output, h1 = lstm_cell.call(inputs, h0)
-print h1.h
-print h1.c
+#print h1.h
+#print h1.c
 
+def get_a_cell():
+    return tf.nn.rnn_cell.BasicRNNCell(num_units = 128)
 
+cell = tf.nn.rnn_cell.MultiRNNCell([get_a_cell() for _ in range(3)])
+print cell.state_size
+
+inputs = tf.placeholder(np.float32,shape=(32,100))
+h0 = cell.zero_state(32,np.float32)
+output,h1 = cell.call(inputs,h0)
+print h1
